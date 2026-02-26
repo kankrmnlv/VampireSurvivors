@@ -10,6 +10,7 @@ namespace GameResources.Features.Player.Scripts
     [RequireComponent(typeof(Rigidbody2D))]
     public sealed class PlayerMovement : MonoBehaviour
     {
+        [SerializeField] private PlayerTransformContainer _transformContainer = default;
         [SerializeField] private Rigidbody2D _rigidbody2D = default;
         [SerializeField] private InputActionReference _moveAction = default;
 
@@ -41,6 +42,8 @@ namespace GameResources.Features.Player.Scripts
             _moveAction.action.performed += OnMovePerformed;
             _moveAction.action.canceled += OnMoveCanceled;
             _moveAction.action.Enable();
+            
+            _transformContainer.Set(transform);
         }
 
         private void OnDisable()
@@ -53,6 +56,8 @@ namespace GameResources.Features.Player.Scripts
             }
 
             _moveInput = Vector2.zero;
+            
+            _transformContainer.Clear();
         }
 
         private void FixedUpdate()
