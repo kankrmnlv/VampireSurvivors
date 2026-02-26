@@ -265,6 +265,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &772897494
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 772897496}
+  - component: {fileID: 772897495}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &772897495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 772897494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c14ec0346542b844b148b1333c99ad7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameResources.Features.Combat.Scripts.ProjectilePool
+  _projectilePrefab: {fileID: 6800913330035249277, guid: 313c32b22a9e45946a23f0279f215185, type: 3}
+  _defaultCapacity: 5
+  _maxSize: 10
+--- !u!4 &772897496
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 772897494}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10.05708, y: 6.00283, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,6 +638,7 @@ MonoBehaviour:
   _spotter: {fileID: 1427496131}
   _projectilePrefab: {fileID: 6800913330035249277, guid: 313c32b22a9e45946a23f0279f215185, type: 3}
   _shootPoint: {fileID: 1427496128}
+  _projectilePool: {fileID: 772897495}
 --- !u!114 &1427496131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -614,3 +662,4 @@ SceneRoots:
   - {fileID: 705507995}
   - {fileID: 1427496128}
   - {fileID: 155898864}
+  - {fileID: 772897496}

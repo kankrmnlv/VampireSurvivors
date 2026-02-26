@@ -14,8 +14,8 @@ namespace GameResources.Features.Combat.Scripts
         private const string PROJECTILE_SKILL_ID = "projectile";
 
         [SerializeField] private EnemySpotter _spotter = default;
-        [SerializeField] private Projectile _projectilePrefab = default;
         [SerializeField] private Transform _shootPoint = default;
+        [SerializeField] private ProjectilePool _projectilePool = default;
 
         private int _damage = default;
         private float _cooldown = default;
@@ -119,7 +119,7 @@ namespace GameResources.Features.Combat.Scripts
 
             for (int i = 0; i < _count; i++)
             {
-                Projectile projectile = Instantiate(_projectilePrefab, _shootPoint.position, Quaternion.identity);
+                Projectile projectile = _projectilePool.Get(_shootPoint.position, Quaternion.identity);
                 projectile.Initialize(dir, _projectileSpeed, _damage);
             }
         }
