@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5217457561447179334}
   - component: {fileID: 8673586671554078685}
   - component: {fileID: 6800913330035249277}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,5 +170,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameResources.Features.Combat.Scripts.Projectile
   _rigidbody2D: {fileID: 5217457561447179334}
-  _lifeTime: 3
   _enemyRegistry: {fileID: 11400000, guid: 70822777fe5c7fb4ebf123e72908239c, type: 2}

@@ -17,8 +17,6 @@ namespace GameResources.Features.Combat.Scripts
         [SerializeField] private Projectile _projectilePrefab = default;
         [SerializeField] private Transform _shootPoint = default;
 
-        private float _attackRange = default;
-
         private int _damage = default;
         private float _cooldown = default;
         private float _projectileSpeed = default;
@@ -49,7 +47,7 @@ namespace GameResources.Features.Combat.Scripts
             while (true)
             {
                 _spotter.CleanupNullTargets();
-                _targetEnemy = FindNearestTarget(_spotter.TargetsInRange, _attackRange);
+                _targetEnemy = FindNearestTarget(_spotter.TargetsInRange);
                 if (_targetEnemy != null)
                 {
                     Shoot(_targetEnemy);
@@ -67,9 +65,6 @@ namespace GameResources.Features.Combat.Scripts
                 Debug.LogError($"{nameof(AutoAttackProjectileCoroutine)}: Balance not loaded.");
                 return;
             }
-
-            _attackRange = BalanceManager.Balance.Player.AutoAttackRange;
-            _spotter.SetRadius(_attackRange);
             
             if (!BalanceManager.Balance.TryGetSkill(PROJECTILE_SKILL_ID, out SkillConfigDto skill))
             {
@@ -77,20 +72,21 @@ namespace GameResources.Features.Combat.Scripts
                 return;
             }
 
+            _spotter.SetRadius(BalanceManager.Balance.Player.AutoAttackRange);
             _damage = skill.Damage;
             _cooldown = Mathf.Max(0.05f, skill.Cooldown);
             _projectileSpeed = skill.ProjectileSpeed;
             _count = Mathf.Max(1, skill.ProjectilesCount);
         }
 
-        private Enemy FindNearestTarget(IReadOnlyList<Enemy> targets, float range)
+        private Enemy FindNearestTarget(IReadOnlyList<Enemy> targets)
         {
             if (targets == null || targets.Count == 0)
             {
                 return null;
             }
             
-            float bestSqr = range * range;
+            float bestSqr = float.MaxValue;
             Enemy best = null;
 
             for (int i = 0; i < targets.Count; i++)
@@ -101,11 +97,10 @@ namespace GameResources.Features.Combat.Scripts
                 }
 
                 Vector2 delta = targets[i].transform.position - transform.position;
-                float sqr = delta.sqrMagnitude;
 
-                if (sqr <= bestSqr)
+                if (delta.sqrMagnitude < bestSqr)
                 {
-                    bestSqr = sqr;
+                    bestSqr = delta.sqrMagnitude;
                     best = targets[i];
                 }
             }
