@@ -25,15 +25,16 @@ namespace GameResources.Features.Enemy.Scripts
         
         [SerializeField] private string _enemyId = string.Empty;
         [SerializeField] private EnemyRegistryContainer _registry = default;
+        [SerializeField] private Collider2D _collider = default;
 
         private int _currentHealth = default;
         private int _xpReward = default;
 
         private void Awake() => LoadFromBalance();
 
-        private void OnEnable() => _registry.Register(this);
+        private void OnEnable() => _registry.Register(this, _collider);
 
-        private void OnDisable() => _registry.Unregister(this);
+        private void OnDisable() => _registry.Unregister(this, _collider);
 
         /// <summary>
         /// Получение урона

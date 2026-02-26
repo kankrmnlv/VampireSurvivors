@@ -22,7 +22,6 @@ namespace GameResources.Features.Player.Scripts
             if (BalanceManager.Balance != null)
             {
                 _moveSpeed = BalanceManager.Balance.Player.MoveSpeed;
-                Debug.Log(_moveSpeed);
             }
             else
             {

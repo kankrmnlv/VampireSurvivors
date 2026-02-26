@@ -10,10 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8410245233865250328}
   - component: {fileID: 1074041915089987547}
-  - component: {fileID: 3143651712210675945}
   - component: {fileID: 2527070586792145289}
+  - component: {fileID: 9147054656035088948}
+  - component: {fileID: 3143651712210675945}
   - component: {fileID: 6947307092978810106}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: EnemyFast
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,20 +95,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &3143651712210675945
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 370338766185081682}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7586ab1bc8e07804b8c27c58ad3e20e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameResources.Features.Enemy.Scripts.Enemy
-  _enemyId: fast
-  _registry: {fileID: 11400000, guid: 70822777fe5c7fb4ebf123e72908239c, type: 2}
 --- !u!50 &2527070586792145289
 Rigidbody2D:
   serializedVersion: 5
@@ -135,6 +122,67 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!61 &9147054656035088948
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370338766185081682}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!114 &3143651712210675945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370338766185081682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7586ab1bc8e07804b8c27c58ad3e20e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameResources.Features.Enemy.Scripts.Enemy
+  _enemyId: fast
+  _registry: {fileID: 11400000, guid: 70822777fe5c7fb4ebf123e72908239c, type: 2}
+  _collider: {fileID: 9147054656035088948}
 --- !u!114 &6947307092978810106
 MonoBehaviour:
   m_ObjectHideFlags: 0
