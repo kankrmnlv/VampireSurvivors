@@ -15,6 +15,8 @@ namespace GameResources.Features.Enemy.Scripts
         public IReadOnlyList<Enemy> ActiveEnemies => _activeEnemies;
 
         [SerializeField] private List<Enemy> _activeEnemies = default;
+        
+        private readonly Dictionary<Collider2D, Enemy> _enemyByCollider = new Dictionary<Collider2D, Enemy>();
 
         /// <summary>
         /// Очистить список
@@ -28,12 +30,13 @@ namespace GameResources.Features.Enemy.Scripts
             }
 
             _activeEnemies.Clear();
+            _enemyByCollider.Clear();
         }
 
         /// <summary>
         /// Добавиться в список
         /// </summary>
-        public void Register(Enemy enemy)
+        public void Register(Enemy enemy, Collider2D collider)
         {
             if (enemy == null)
             {
@@ -49,12 +52,14 @@ namespace GameResources.Features.Enemy.Scripts
             {
                 _activeEnemies.Add(enemy);
             }
+            
+            _enemyByCollider[collider] = enemy;
         }
 
         /// <summary>
         /// Удалиться из списка
         /// </summary>
-        public void Unregister(Enemy enemy)
+        public void Unregister(Enemy enemy, Collider2D collider)
         {
             if (enemy == null || _activeEnemies == null)
             {
@@ -62,6 +67,21 @@ namespace GameResources.Features.Enemy.Scripts
             }
 
             _activeEnemies.Remove(enemy);
+            _enemyByCollider.Remove(collider);
+        }
+        
+        /// <summary>
+        /// Получить компонент через коллайдер
+        /// </summary>
+        public bool TryGetEnemy(Collider2D collider, out Enemy enemy)
+        {
+            if (collider == null)
+            {
+                enemy = default;
+                return false;
+            }
+
+            return _enemyByCollider.TryGetValue(collider, out enemy);
         }
     }
 }
