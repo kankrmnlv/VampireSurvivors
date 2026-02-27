@@ -67,7 +67,7 @@ namespace GameResources.Features.Player.Scripts
 
         private IEnumerator Restart()
         {
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSecondsRealtime(3f);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
