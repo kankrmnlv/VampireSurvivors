@@ -2,12 +2,15 @@ namespace GameResources.Features.Player.Scripts
 {
     using UnityEngine;
     using GameResources.Features.Data.Scripts;
+    using System;
 
     /// <summary>
     /// Хп игрока
     /// </summary>
     public sealed class PlayerHealth : MonoBehaviour
     {
+        public event Action<int, int> onHealthChanged = delegate { };
+        
         private int _maxHealth = default;
         private int _currentHealth = default;
 
@@ -29,6 +32,7 @@ namespace GameResources.Features.Player.Scripts
             }
 
             _currentHealth = _maxHealth;
+            onHealthChanged(_currentHealth, _maxHealth);
         }
 
         /// <summary>
@@ -49,6 +53,7 @@ namespace GameResources.Features.Player.Scripts
                 _currentHealth = 0;
                 Die();
             }
+            onHealthChanged(_currentHealth, _maxHealth);
         }
 
         private void Die()

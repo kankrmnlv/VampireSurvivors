@@ -3,6 +3,7 @@ namespace GameResources.Features.UI.Scripts
     using UnityEngine;
     using UnityEngine.UI;
     using GameResources.Features.LevelXp.Scripts;
+    using GameResources.Features.Player.Scripts;
 
     /// <summary>
     /// Контроллер hud игрока
@@ -10,7 +11,7 @@ namespace GameResources.Features.UI.Scripts
     public sealed class PlayerHudPresenter : MonoBehaviour
     {
         [Header("Sources")]
-        //[SerializeField] private PlayerHealth _playerHealth = default;
+        [SerializeField] private PlayerHealth _playerHealth = default;
         [SerializeField] private XpSystem _xpSystem = default;
 
         [Header("UI")]
@@ -20,18 +21,21 @@ namespace GameResources.Features.UI.Scripts
 
         private void OnEnable()
         {
+            _playerHealth.onHealthChanged += OnHealthChanged;
             _xpSystem.onProgressChanged += OnXpChanged;
             OnXpChanged(_xpSystem.Level, _xpSystem.CurrentXp, _xpSystem.XpToNext);
         }
 
-        private void OnDisable() => _xpSystem.onProgressChanged -= OnXpChanged;
+        private void OnDisable()
+        {
+            _playerHealth.onHealthChanged -= OnHealthChanged;
+            _xpSystem.onProgressChanged -= OnXpChanged;
+        }
 
         private void OnHealthChanged(int current, int max)
         {
             if (_hpBar == null)
-            {
                 return;
-            }
 
             float normalized = max > 0 ? (float)current / max : 0f;
             _hpBar.value = Mathf.Clamp01(normalized);
