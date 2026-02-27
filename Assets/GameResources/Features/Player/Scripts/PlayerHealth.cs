@@ -1,0 +1,74 @@
+namespace GameResources.Features.Player.Scripts
+{
+    using UnityEngine;
+    using GameResources.Features.Data.Scripts;
+    using System;
+    using System.Collections;
+    using UnityEngine.SceneManagement;
+
+    /// <summary>
+    /// Хп игрока
+    /// </summary>
+    public sealed class PlayerHealth : MonoBehaviour
+    {
+        public event Action<int, int> onHealthChanged = delegate { };
+        public event Action onDeath = delegate { };
+        
+        private int _maxHealth = default;
+        private int _currentHealth = default;
+
+        /// <summary>
+        /// Мертв ли игрок
+        /// </summary>
+        public bool IsDead => _currentHealth <= 0;
+
+        private void Start()
+        {
+            if (BalanceManager.Balance != null)
+            {
+                _maxHealth = BalanceManager.Balance.Player.MaxHealth;
+            }
+            else
+            {
+                Debug.LogWarning($"{nameof(PlayerHealth)}: Balance is not loaded. MaxHealth will be 1.");
+                _maxHealth = 1;
+            }
+
+            _currentHealth = _maxHealth;
+            onHealthChanged(_currentHealth, _maxHealth);
+        }
+
+        /// <summary>
+        /// Получить урон
+        /// </summary>
+        public void TakeDamage(int damage)
+        {
+            Debug.Log("TakeDamage: " + damage);
+            if (IsDead || damage <= 0)
+            {
+                return;
+            }
+
+            _currentHealth -= damage;
+
+            if (_currentHealth <= 0)
+            {
+                _currentHealth = 0;
+                Die();
+            }
+            onHealthChanged(_currentHealth, _maxHealth);
+        }
+
+        private void Die()
+        {
+            onDeath();
+            StartCoroutine(Restart());
+        }
+
+        private IEnumerator Restart()
+        {
+            yield return new WaitForSeconds(3f);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+}

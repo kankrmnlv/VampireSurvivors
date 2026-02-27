@@ -7,6 +7,7 @@ namespace GameResources.Features.LevelXp.Scripts
     public sealed class XpSystem : MonoBehaviour
     {
         public event Action<int> onLevelUp = delegate { };
+        public event Action<int, int, int> onProgressChanged = delegate { };
         
         /// <summary>
         /// Паблки аксесор уровня
@@ -39,6 +40,7 @@ namespace GameResources.Features.LevelXp.Scripts
 
             _curve = BalanceManager.Balance.Leveling.XpToNextLevel;
             _xpToNext = GetXpToNext(_level);
+            onProgressChanged(_level, _currentXp, _xpToNext);
         }
 
         /// <summary>
@@ -59,6 +61,7 @@ namespace GameResources.Features.LevelXp.Scripts
                 _currentXp -= _xpToNext;
                 LevelUp();
             }
+            onProgressChanged(_level, _currentXp, _xpToNext);
         }
 
         private void LevelUp()
