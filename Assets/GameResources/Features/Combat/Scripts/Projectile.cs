@@ -3,14 +3,14 @@ namespace GameResources.Features.Combat.Scripts
     using UnityEngine;
     using GameResources.Features.Enemy.Scripts;
     using System.Collections;
-    using UnityEngine.Pool;
+    using GameResources.Features.Pool;
 
     /// <summary>
     /// Снаряд
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Collider2D))]
-    public sealed class Projectile : MonoBehaviour
+    public sealed class Projectile : PooledBehaviour<Projectile>
     {
         private const int PROJECTILE_EXPIRE = 5;
         
@@ -18,13 +18,6 @@ namespace GameResources.Features.Combat.Scripts
         [SerializeField] private EnemyRegistryContainer _enemyRegistry = default;
 
         private int _damage = default;
-        private IObjectPool<Projectile> _ownerPool = default;
-        
-        /// <summary>
-        /// Запулить
-        /// </summary>
-        /// <param name="pool"></param>
-        public void SetPool(IObjectPool<Projectile> pool) => _ownerPool = pool;
         
         /// <summary>
         /// Инициализация
@@ -55,15 +48,7 @@ namespace GameResources.Features.Combat.Scripts
 
             _rigidbody2D.linearVelocity = Vector2.zero;
             _rigidbody2D.angularVelocity = 0f;
-
-            if (_ownerPool != null)
-            {
-                _ownerPool.Release(this);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+            ReleaseSelf();
         }
         
         private IEnumerator ProjectileLifeCycle()

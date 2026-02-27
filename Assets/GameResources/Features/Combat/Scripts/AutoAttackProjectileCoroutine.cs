@@ -5,6 +5,7 @@ namespace GameResources.Features.Combat.Scripts
     using UnityEngine;
     using GameResources.Features.Enemy.Scripts;
     using GameResources.Features.Data.Scripts;
+    using GameResources.Features.Skills.Scripts;
 
     /// <summary>
     /// Автоатака по врагам
@@ -12,22 +13,19 @@ namespace GameResources.Features.Combat.Scripts
     public sealed class AutoAttackProjectileCoroutine : MonoBehaviour
     {
         private const string PROJECTILE_SKILL_ID = "projectile";
+        private const float MIN_COOLDOWN = 0.05f;
 
         [SerializeField] private EnemySpotter _spotter = default;
         [SerializeField] private Transform _shootPoint = default;
         [SerializeField] private ProjectilePool _projectilePool = default;
 
-        private int _damage = default;
-        private float _cooldown = default;
-        private float _projectileSpeed = default;
-        private int _count = default;
+        [SerializeField] private SkillsRuntime _skillsRuntime = default;
 
         private Coroutine _attackRoutine = default;
-        private Enemy _targetEnemy = default;
 
         private void Start()
         {
-            LoadFromBalance();
+            SetupFromBalance();
             _attackRoutine = StartCoroutine(AttackLoop());
         }
 
@@ -42,23 +40,29 @@ namespace GameResources.Features.Combat.Scripts
 
         private IEnumerator AttackLoop()
         {
-            WaitForSeconds wait = new WaitForSeconds(_cooldown);
-
             while (true)
             {
-                _spotter.CleanupNullTargets();
-                _targetEnemy = FindNearestTarget(_spotter.TargetsInRange);
-                if (_targetEnemy != null)
+                SkillRuntimeState state = _skillsRuntime.Get(PROJECTILE_SKILL_ID);
+                if (state == null)
                 {
-                    Shoot(_targetEnemy);
+                    Debug.LogWarning($"{nameof(AutoAttackProjectileCoroutine)}: Runtime state for '{PROJECTILE_SKILL_ID}' not found.");
+                    yield return new WaitForSeconds(MIN_COOLDOWN);
+                    continue;
                 }
-                yield return wait;
+
+                _spotter.CleanupNullTargets();
+
+                Enemy targetEnemy = FindNearestTarget(_spotter.TargetsInRange);
+                if (targetEnemy != null)
+                {
+                    Shoot(targetEnemy, state);
+                }
                 
-                wait = new WaitForSeconds(_cooldown);
+                yield return new WaitForSeconds(state.Cooldown);
             }
         }
 
-        private void LoadFromBalance()
+        private void SetupFromBalance()
         {
             if (BalanceManager.Balance == null)
             {
@@ -66,17 +70,7 @@ namespace GameResources.Features.Combat.Scripts
                 return;
             }
             
-            if (!BalanceManager.Balance.TryGetSkill(PROJECTILE_SKILL_ID, out SkillConfigDto skill))
-            {
-                Debug.LogError($"{nameof(AutoAttackProjectileCoroutine)}: Skill '{PROJECTILE_SKILL_ID}' not found.");
-                return;
-            }
-
             _spotter.SetRadius(BalanceManager.Balance.Player.AutoAttackRange);
-            _damage = skill.Damage;
-            _cooldown = Mathf.Max(0.05f, skill.Cooldown);
-            _projectileSpeed = skill.ProjectileSpeed;
-            _count = Mathf.Max(1, skill.ProjectilesCount);
         }
 
         private Enemy FindNearestTarget(IReadOnlyList<Enemy> targets)
@@ -85,10 +79,10 @@ namespace GameResources.Features.Combat.Scripts
             {
                 return null;
             }
-            
+
             float bestSqr = float.MaxValue;
             Enemy best = null;
-
+            
             for (int i = 0; i < targets.Count; i++)
             {
                 if (targets[i] == null)
@@ -108,19 +102,20 @@ namespace GameResources.Features.Combat.Scripts
             return best;
         }
 
-        private void Shoot(Enemy target)
+        private void Shoot(Enemy target, SkillRuntimeState state)
         {
             Vector2 dir = (target.transform.position - _shootPoint.position).normalized;
-
             if (dir == Vector2.zero)
             {
                 dir = Vector2.up;
             }
 
-            for (int i = 0; i < _count; i++)
+            int count = Mathf.Max(1, state.ProjectilesCount);
+
+            for (int i = 0; i < count; i++)
             {
                 Projectile projectile = _projectilePool.Get(_shootPoint.position, Quaternion.identity);
-                projectile.Initialize(dir, _projectileSpeed, _damage);
+                projectile.Initialize(dir, state.ProjectileSpeed, state.Damage);
             }
         }
     }

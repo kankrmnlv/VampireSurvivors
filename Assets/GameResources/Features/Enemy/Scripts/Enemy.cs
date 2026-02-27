@@ -2,6 +2,7 @@ namespace GameResources.Features.Enemy.Scripts
 {
     using UnityEngine;
     using GameResources.Features.Data.Scripts;
+    using GameResources.Features.LevelXp.Scripts;
 
     /// <summary>
     /// Враг
@@ -26,6 +27,8 @@ namespace GameResources.Features.Enemy.Scripts
         [SerializeField] private string _enemyId = string.Empty;
         [SerializeField] private EnemyRegistryContainer _registry = default;
         [SerializeField] private Collider2D _collider = default;
+
+        private XpPool _xpOrbPool = default;
 
         private int _currentHealth = default;
         private int _xpReward = default;
@@ -53,6 +56,12 @@ namespace GameResources.Features.Enemy.Scripts
                 Die();
             }
         }
+        
+        /// <summary>
+        /// Получить компонента пула
+        /// </summary>
+        /// <param name="pool"></param>
+        public void SetXpPool(XpPool pool) => _xpOrbPool = pool;
 
         private void LoadFromBalance()
         {
@@ -72,6 +81,25 @@ namespace GameResources.Features.Enemy.Scripts
             _xpReward = config.XpReward;
         }
 
-        private void Die() => Destroy(gameObject);
+        private void Die()
+        {
+            SpawnXpOrb();
+            Destroy(gameObject);
+        }
+
+        private void SpawnXpOrb()
+        {
+            if (_xpOrbPool == null)
+            {
+                Debug.LogError($"{nameof(Enemy)}: XpPool not loaded.");
+                return;
+            }
+
+            XpOrb orb = _xpOrbPool.Get(transform.position, Quaternion.identity);
+            if (orb != null)
+            {
+                orb.SetXpAmount(_xpReward);
+            }
+        }
     }
 }
