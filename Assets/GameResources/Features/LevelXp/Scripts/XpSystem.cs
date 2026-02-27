@@ -2,9 +2,12 @@ namespace GameResources.Features.LevelXp.Scripts
 {
     using UnityEngine;
     using GameResources.Features.Data.Scripts;
+    using System;
 
     public sealed class XpSystem : MonoBehaviour
     {
+        public event Action<int> onLevelUp = delegate { };
+        
         /// <summary>
         /// Паблки аксесор уровня
         /// </summary>
@@ -63,6 +66,7 @@ namespace GameResources.Features.LevelXp.Scripts
             _level += 1;
             _xpToNext = GetXpToNext(_level);
 
+            onLevelUp(_level);
             Debug.Log($"[{nameof(XpSystem)}] Level Up! Level={_level}");
         }
 
