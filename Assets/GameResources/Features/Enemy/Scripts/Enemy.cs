@@ -24,6 +24,11 @@ namespace GameResources.Features.Enemy.Scripts
         /// </summary>
         public int XpReward => _xpReward;
         
+        /// <summary>
+        /// Паблик аксесор урона
+        /// </summary>
+        public int ContactDamage => _contactDamage;
+        
         [SerializeField] private string _enemyId = string.Empty;
         [SerializeField] private EnemyRegistryContainer _registry = default;
         [SerializeField] private Collider2D _collider = default;
@@ -32,6 +37,7 @@ namespace GameResources.Features.Enemy.Scripts
 
         private int _currentHealth = default;
         private int _xpReward = default;
+        private int _contactDamage = default;
 
         private void Awake() => LoadFromBalance();
 
@@ -79,6 +85,7 @@ namespace GameResources.Features.Enemy.Scripts
 
             _currentHealth = config.MaxHealth;
             _xpReward = config.XpReward;
+            _contactDamage = config.ContactDamage;
         }
 
         private void Die()
