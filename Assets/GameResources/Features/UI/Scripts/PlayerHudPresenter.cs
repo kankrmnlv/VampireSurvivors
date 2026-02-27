@@ -18,9 +18,13 @@ namespace GameResources.Features.UI.Scripts
         [SerializeField] private Slider _hpBar = default;
         [SerializeField] private Slider _xpBar = default;
         [SerializeField] private Text _levelText = default;
+        
+        [Header("Death panel")]
+        [SerializeField] private GameObject _deathPanel = default;
 
         private void OnEnable()
         {
+            _playerHealth.onDeath += OnDeath;
             _playerHealth.onHealthChanged += OnHealthChanged;
             _xpSystem.onProgressChanged += OnXpChanged;
             OnXpChanged(_xpSystem.Level, _xpSystem.CurrentXp, _xpSystem.XpToNext);
@@ -28,6 +32,7 @@ namespace GameResources.Features.UI.Scripts
 
         private void OnDisable()
         {
+            _playerHealth.onDeath -= OnDeath;
             _playerHealth.onHealthChanged -= OnHealthChanged;
             _xpSystem.onProgressChanged -= OnXpChanged;
         }
@@ -51,5 +56,7 @@ namespace GameResources.Features.UI.Scripts
                 _xpBar.value = Mathf.Clamp01(normalized);
             }
         }
+        
+        private void OnDeath() => _deathPanel.SetActive(true);
     }
 }

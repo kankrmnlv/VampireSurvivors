@@ -3,6 +3,8 @@ namespace GameResources.Features.Player.Scripts
     using UnityEngine;
     using GameResources.Features.Data.Scripts;
     using System;
+    using System.Collections;
+    using UnityEngine.SceneManagement;
 
     /// <summary>
     /// Хп игрока
@@ -10,6 +12,7 @@ namespace GameResources.Features.Player.Scripts
     public sealed class PlayerHealth : MonoBehaviour
     {
         public event Action<int, int> onHealthChanged = delegate { };
+        public event Action onDeath = delegate { };
         
         private int _maxHealth = default;
         private int _currentHealth = default;
@@ -58,7 +61,14 @@ namespace GameResources.Features.Player.Scripts
 
         private void Die()
         {
-            Debug.Log($"{nameof(PlayerHealth)}: Player died");
+            onDeath();
+            StartCoroutine(Restart());
+        }
+
+        private IEnumerator Restart()
+        {
+            yield return new WaitForSeconds(3f);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }
